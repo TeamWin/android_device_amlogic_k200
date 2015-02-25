@@ -1,0 +1,16 @@
+# mount point   fstype      device                  [device2]
+
+/bootloader     mtd         bootloader              flags=backup=1
+/ubootenv       mtd         ubootenv                flags=backup=1
+#/env            emmc       /dev/block/env
+#/reserved       emmc       /dev/block/reserved
+/logo           emmc        /dev/block/logo         flags=backup=1
+/misc           emmc        /dev/block/misc
+/recovery       emmc        /dev/block/recovery     flags=backup=1
+/boot           emmc        /dev/block/boot         flags=backup=1
+/cache          ext4        /dev/block/cache        flags=backup=1
+/system         ext4        /dev/block/system       flags=backup=1
+/data           ext4        /dev/block/data         flags=backup=1
+/sdcard         vfat        /data/media/0           flags=wipeingui;storage;backup=1;display="Internal SD"
+/external_sd    auto        /dev/block/mmcblk0p1    flags=wipeingui;storage;removable;display="External SD"
+/usb-otg        auto        /dev/block/sda1         flags=display="USB OTG";removable;storage
