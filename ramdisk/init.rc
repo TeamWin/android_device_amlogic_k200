@@ -54,10 +54,6 @@ service display /sbin/sh /sbin/set_display_mode.sh
 # Disable suspend
     write /sys/power/wake_lock true
 
-#Let's try the remote
-service remotecontrol /sbin/remotecfg /etc/remote.conf
-    oneshot
-
 on property:sys.powerctl=*
     powerctl ${sys.powerctl}
 
