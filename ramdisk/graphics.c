@@ -165,10 +165,10 @@ int getFbYres (void) {
 int get_scale_height()
 {
     FILE *file_scale_height;
-    file_scale_height = fopen("/sys/devices/platform/mesonfb/graphics/fb0/scale_height", "r");
     int caracter, i, count=0;
     int place_holder[5];
     static int scale_height=0;
+    START:file_scale_height = fopen("/sys/devices/platform/mesonfb/graphics/fb0/scale_height", "r");
 
     if (!file_scale_height) {
         perror("Error Reading scale_height\n");
@@ -182,17 +182,23 @@ int get_scale_height()
     }
     for ( i = 0; i < count; i++)
         scale_height=10*scale_height+place_holder[i];
+    scale_height=scale_height+1;
+    if (scale_height == 1) {
+        fclose(file_scale_height);
+        scale_height=0;
+        goto START;
+    }
     fclose(file_scale_height);
-    return scale_height;
+    return (scale_height);
 }
 
 int get_scale_width()
 {
     FILE *file_scale_width;
-    file_scale_width = fopen("/sys/devices/platform/mesonfb/graphics/fb0/scale_width", "r");
     int caracter, i, count=0;
     int place_holder[5];
     static int scale_width=0;
+    START:file_scale_width = fopen("/sys/devices/platform/mesonfb/graphics/fb0/scale_width", "r");
 
     if (!file_scale_width) {
         perror("Error Reading scale_width\n");
@@ -206,8 +212,14 @@ int get_scale_width()
     }
     for (i=0; i < count; i++)
         scale_width=10*scale_width+place_holder[i];
+    scale_width=scale_width+1;
+    if (scale_width == 1) {
+        fclose(file_scale_width);
+        scale_width=0;
+        goto START;
+    }
     fclose(file_scale_width);
-    return scale_width;
+    return (scale_width);
 }
 
 static int get_framebuffer(GGLSurface *fb)
@@ -226,8 +238,7 @@ static int get_framebuffer(GGLSurface *fb)
         close(fd);
         return -1;
     }
-    vi.yres=get_scale_height();
-    vi.xres=get_scale_width();
+
     fprintf(stderr, "Pixel format: %dx%d @ %dbpp\n", vi.xres, vi.yres, vi.bits_per_pixel);
 
     vi.bits_per_pixel = PIXEL_SIZE * 8;
